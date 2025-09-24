@@ -4,34 +4,49 @@
     "firstName": "Alice",
     "lastName": "Smith",
     "accountType": "Premium",
-    "company": "MuleSoft Inc."
+    "company": "MuleSoft Inc.",
+    "address": "101 Main Street, San Francisco",
+    "phone": "+1-555-111-1111",
+    "website": "https://www.mulesoft.com"
   },
   {
     "id": "2",
     "firstName": "Bob",
     "lastName": "Johnson",
     "accountType": "Basic",
-    "company": "Tech Solutions"
+    "company": "Tech Solutions",
+    "address": "202 Tech Avenue, New York",
+    "phone": "+1-555-222-2222",
+    "website": "https://www.techsolutions.com"
   },
   {
     "id": "3",
     "firstName": "Carlos",
     "lastName": "Ramirez",
     "accountType": "Gold",
-    "company": "Finanzas Globales"
+    "company": "Finanzas Globales",
+    "address": "303 Finance Blvd, Mexico City",
+    "phone": "+52-555-333-3333",
+    "website": "https://www.finanzasglobales.mx"
   },
   {
     "id": "4",
     "firstName": "Diana",
     "lastName": "Martinez",
     "accountType": "Standard",
-    "company": "RetailCorp"
+    "company": "RetailCorp",
+    "address": "404 Retail Street, Bogotá",
+    "phone": "+57-1-444-4444",
+    "website": "https://www.retailcorp.co"
   },
   {
     "id": "5",
     "firstName": "Ethan",
     "lastName": "Brown",
     "accountType": "Platinum",
-    "company": "Tech Innovators"
+    "company": "Tech Innovators",
+    "address": "505 Innovation Drive, London",
+    "phone": "+44-20-555-5555",
+    "website": "https://www.techinnovators.uk"
   }
 ]
