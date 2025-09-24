@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets" xmlns:file="http://www.mulesoft.org/schema/mule/file"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
-http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd">
+http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+http://www.mulesoft.org/schema/mule/graphql-router http://www.mulesoft.org/schema/mule/graphql-router/current/mule-graphql-router.xsd">
 	<file:config name="File_Config" doc:name="File Config" doc:id="14f86b99-5eb0-40c3-9039-d2190cab7fff" >
 		<file:connection workingDir="C:\Users\leidy\AnypointStudio\studio-workspace\graphql-demo\src\main\resources\examples" />
 	</file:config>
-	<flow name="get-accounts-flow" doc:id="d202d8b8-a72f-4707-b977-ea172e4cdfc7" >
-		<http:listener doc:name="get-accounts" doc:id="f01fa0b2-6a16-46af-a65b-6858a7a9ca62" config-ref="HTTP_Listener_config" path="/accounts"/>
-		<file:read doc:name="accounts" doc:id="17d56a7b-5fbf-424d-b63c-640299f1b85a" path="accounts.json" config-ref="File_Config"/>
+	<flow name="graphql-demoFlow" doc:id="5a57a6d1-9f43-4865-83e7-565275e1f52e" >
+		<http:listener doc:name="/graphql" doc:id="8e579989-cc4b-4f21-8143-ee6b6be86b31" config-ref="HTTP_Listener_config" path="/graphql"/>
+		<parse-template doc:name="Parse Template" doc:id="c0a5f8fd-6346-4ab9-a6f2-2acfe27df3c2" location="index.html"/>
+		<set-payload value='#["ssi"]' doc:name="Set Payload" doc:id="855122e1-73c0-4a8b-a59c-e69e46241d56" />
 	</flow>
-	<flow name="get-transactions-flow" doc:id="c1b56f4b-f0e1-491b-bf4a-3ce1bffae008" >
-		<http:listener doc:name="get-transactions" doc:id="0fb03637-7141-48f4-a3be-4df1654dd2ad" config-ref="HTTP_Listener_config" path="/transactions"/>
-		<file:read doc:name="transactions" doc:id="483314ef-191b-452b-bf96-57de61066250" path="transactions.json" config-ref="File_Config"/>
-	</flow>
-	<flow name="get-balances-flow" doc:id="818bc70d-cbe6-40ae-9d15-dd8886317fbf" >
-		<http:listener doc:name="get-balances" doc:id="5dbab7eb-4e15-4b3a-a994-962edcbb4174" config-ref="HTTP_Listener_config" path="/balances"/>
-		<file:read doc:name="balances" doc:id="fa2b3b29-740f-466d-856b-eb61b1849f02" path="balances.json" config-ref="File_Config"/>
+	<flow name="graphql-demoFlow1" doc:id="7020c030-7902-43a7-bd01-bce1114e45fd" >
+		<http:listener doc:name="Listener" doc:id="6df97e3c-6b82-48f4-9f84-43aa1e0536fc" config-ref="HTTP_Listener_config" path="/query"/>
+		<graphql-router:route doc:name="Route" doc:id="fb4cdc9f-08d2-4386-b2ff-0f4c900321ef" config-ref="GraphQL_Router_Config_accounts"/>
 	</flow>
 </mule>

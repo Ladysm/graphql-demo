@@ -1,10 +1,14 @@
 schema {
-	query: Query
-} 
+  query: Query
+}
 
 type Query {
-account(id: String): Account
-
+  account(id: ID!): Account
+  balance(id: ID!): Balance
+  transaction(id: ID!): Transaction
+  accounts: [Account]
+  balances: [Balance]
+  transactions: [Transaction]
 }
 
 type Account {
@@ -15,4 +19,17 @@ type Account {
   website: String
   company: String
   accountType: String
+}
+
+type Balance {
+  id: ID
+  balanceType: String
+  amount: Float
+}
+
+type Transaction {
+  id: ID
+  tranAmount: Float
+  description: String
+  tranDate: String
 }
