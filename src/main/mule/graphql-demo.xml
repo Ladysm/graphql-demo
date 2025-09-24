@@ -12,21 +12,21 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<file:connection workingDir="C:\Users\leidy\AnypointStudio\studio-workspace\graphql-demo\src\main\resources\examples" />
 	</file:config>
 	<flow name="graphql-demoFlow" doc:id="5a57a6d1-9f43-4865-83e7-565275e1f52e" >
-		<http:listener doc:name="/graphql" doc:id="8e579989-cc4b-4f21-8143-ee6b6be86b31" config-ref="HTTP_Listener_config" path="/graphql"/>
+		<http:listener doc:name="/graphiql" doc:id="8e579989-cc4b-4f21-8143-ee6b6be86b31" config-ref="HTTP_Listener_config" path="/graphiql"/>
 		<parse-template doc:name="Parse Template" doc:id="c0a5f8fd-6346-4ab9-a6f2-2acfe27df3c2" location="index.html" outputMimeType="text/html"/>
 		<set-payload value='#[payload]' doc:name="Set Payload" doc:id="855122e1-73c0-4a8b-a59c-e69e46241d56" />
 	</flow>
 	<flow name="graphql-demoFlow1" doc:id="7020c030-7902-43a7-bd01-bce1114e45fd" >
-		<http:listener doc:name="Listener" doc:id="6df97e3c-6b82-48f4-9f84-43aa1e0536fc" config-ref="HTTP_Listener_config" path="/query"/>
+		<http:listener doc:name="/query" doc:id="6df97e3c-6b82-48f4-9f84-43aa1e0536fc" config-ref="HTTP_Listener_config" path="/graphql"/>
 		<graphql-router:route doc:name="Route" doc:id="fb4cdc9f-08d2-4386-b2ff-0f4c900321ef" config-ref="GraphQL_Router_Config_accounts"/>
 	</flow>
-	<flow name="graphql-demoFlow2" doc:id="39a05311-bcd7-4c63-968c-ce06a684b2c7" >
-		<graphql-router:data-fetcher doc:name="Data fetcher" doc:id="2b46f11b-b48d-4eac-bd0f-66f55f78d942" config-ref="GraphQL_Router_Config_accounts" objectTypeName="Account" fieldName="address"/>
-		<http:request method="GET" doc:name="Request" doc:id="5e065e9d-94c0-470a-9b55-7f3fa90aded6" url="http://localhost:8081/accounts/{accountId}">
+	<flow name="graphql-accounts-flow" doc:id="39a05311-bcd7-4c63-968c-ce06a684b2c7" >
+		<graphql-router:data-fetcher doc:name="Data fetcher" doc:id="2b46f11b-b48d-4eac-bd0f-66f55f78d942" config-ref="GraphQL_Router_Config_accounts" objectTypeName="Query" fieldName="account"/>
+		<http:request method="GET" doc:name="POST" doc:id="5e065e9d-94c0-470a-9b55-7f3fa90aded6" url="http://localhost:8081/accounts/{accountId}">
 			<http:uri-params ><![CDATA[#[output application/java
 ---
 {
-	"accountId" : payload.params.id
+	"accountId" : attributes.arguments.id
 }]]]></http:uri-params>
 		</http:request>
 		<ee:transform doc:name="Transform Message" doc:id="55a3e77b-2905-446a-a0c0-9c98559efd85" >
