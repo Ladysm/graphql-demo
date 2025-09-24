@@ -1,0 +1,42 @@
+[
+  {
+    "transactionId": "T1001",
+    "accountId": "1",
+    "date": "2024-01-10",
+    "amount": 250.75,
+    "type": "CREDIT",
+    "description": "Salary Payment"
+  },
+  {
+    "transactionId": "T1002",
+    "accountId": "1",
+    "date": "2024-01-12",
+    "amount": -50.00,
+    "type": "DEBIT",
+    "description": "Grocery Shopping"
+  },
+  {
+    "transactionId": "T2001",
+    "accountId": "2",
+    "date": "2024-01-15",
+    "amount": -200.00,
+    "type": "DEBIT",
+    "description": "Electronics Purchase"
+  },
+  {
+    "transactionId": "T3001",
+    "accountId": "3",
+    "date": "2024-01-20",
+    "amount": 1000.00,
+    "type": "CREDIT",
+    "description": "Freelance Project"
+  },
+  {
+    "transactionId": "T4001",
+    "accountId": "4",
+    "date": "2024-01-25",
+    "amount": -75.50,
+    "type": "DEBIT",
+    "description": "Restaurant Bill"
+  }
+]

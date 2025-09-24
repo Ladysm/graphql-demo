@@ -1,0 +1,32 @@
+[
+  {
+    "accountId": "1",
+    "balance": 1200.75,
+    "currency": "USD",
+    "lastUpdated": "2024-01-31"
+  },
+  {
+    "accountId": "2",
+    "balance": 300.00,
+    "currency": "USD",
+    "lastUpdated": "2024-01-31"
+  },
+  {
+    "accountId": "3",
+    "balance": 4500.00,
+    "currency": "USD",
+    "lastUpdated": "2024-01-31"
+  },
+  {
+    "accountId": "4",
+    "balance": 150.25,
+    "currency": "USD",
+    "lastUpdated": "2024-01-31"
+  },
+  {
+    "accountId": "5",
+    "balance": 8000.00,
+    "currency": "USD",
+    "lastUpdated": "2024-01-31"
+  }
+]
