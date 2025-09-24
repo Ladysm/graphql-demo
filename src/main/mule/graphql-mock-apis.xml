@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="get-accounts-flow" doc:id="b1f7b42f-e850-4880-9868-083e6dde9a2a" >
-		<http:listener doc:name="get-accounts" doc:id="a7b32882-3663-47e9-b46f-77721813eb1f" config-ref="HTTP_Listener_config" path="/accounts" />
+		<http:listener doc:name="get-accounts" doc:id="a7b32882-3663-47e9-b46f-77721813eb1f" config-ref="HTTP_Listener_config" path="/accounts/{accountId}" />
 		<file:read doc:name="accounts" doc:id="ff226c6b-5406-4d8f-8d70-55727bf5c8f6" config-ref="File_Config" path="accounts.json" />
+		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" doc:id="606d39f3-fc48-43c9-9b20-f56ebcdf20e6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var id = attributes.arguments.id
+&#45;&#45;-
+(payload filter (item) -> item.id == id)[0&#93;
+&#93;&#93;></ee:set-payload>
+			</ee:message>
+		</ee:transform> [STUDIO] -->
 	</flow>
 	<flow name="get-transactions-flow" doc:id="8eed79f1-55db-4d6e-887c-995fa762856a" >
 		<http:listener doc:name="get-transactions" doc:id="9667bac2-01e4-47ed-848b-d11c5d66af47" config-ref="HTTP_Listener_config" path="/transactions" />

@@ -22,7 +22,8 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	</flow>
 	<flow name="graphql-accounts-flow" doc:id="39a05311-bcd7-4c63-968c-ce06a684b2c7" >
 		<graphql-router:data-fetcher doc:name="Data fetcher" doc:id="2b46f11b-b48d-4eac-bd0f-66f55f78d942" config-ref="GraphQL_Router_Config_accounts" objectTypeName="Query" fieldName="account"/>
-		<http:request method="GET" doc:name="POST" doc:id="5e065e9d-94c0-470a-9b55-7f3fa90aded6" url="http://localhost:8081/accounts/{accountId}">
+		<logger level="INFO" doc:name="Logger" doc:id="befe65aa-29ca-4946-8ed8-e089e325c5c4"/>
+		<http:request method="GET" doc:name="http://localhost:8081/accounts/{accountId}" doc:id="5e065e9d-94c0-470a-9b55-7f3fa90aded6" url="http://localhost:8081/accounts/{accountId}">
 			<http:uri-params ><![CDATA[#[output application/java
 ---
 {
