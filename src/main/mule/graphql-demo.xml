@@ -20,8 +20,8 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<http:listener doc:name="/query" doc:id="6df97e3c-6b82-48f4-9f84-43aa1e0536fc" config-ref="HTTP_Listener_config" path="/graphql"/>
 		<graphql-router:route doc:name="Route" doc:id="fb4cdc9f-08d2-4386-b2ff-0f4c900321ef" config-ref="GraphQL_Router_Config_accounts"/>
 	</flow>
-	<flow name="graphql-accounts-flow" doc:id="39a05311-bcd7-4c63-968c-ce06a684b2c7" >
-		<graphql-router:data-fetcher doc:name="Data fetcher" doc:id="2b46f11b-b48d-4eac-bd0f-66f55f78d942" config-ref="GraphQL_Router_Config_accounts" objectTypeName="Query" fieldName="account"/>
+	<flow name="graphql-get-account-by-id-flow" doc:id="39a05311-bcd7-4c63-968c-ce06a684b2c7" >
+		<graphql-router:data-fetcher doc:name="query-account-by-id" doc:id="2b46f11b-b48d-4eac-bd0f-66f55f78d942" config-ref="GraphQL_Router_Config_accounts" objectTypeName="Query" fieldName="account"/>
 		<logger level="INFO" doc:name="Logger" doc:id="befe65aa-29ca-4946-8ed8-e089e325c5c4"/>
 		<http:request method="GET" doc:name="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/accounts" doc:id="5e065e9d-94c0-470a-9b55-7f3fa90aded6" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/accounts/{accountId}">
 			<http:uri-params ><![CDATA[#[output application/java
@@ -31,12 +31,25 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 }]]]></http:uri-params>
 		</http:request>
 		<logger level="INFO" doc:name="payload" doc:id="3998284b-2b8f-4fa1-9948-c14b91121087" message="#[payload[0]]"/>
-		<ee:transform doc:name="Transform Message" doc:id="55a3e77b-2905-446a-a0c0-9c98559efd85" >
+		<ee:transform doc:name="account-by-id-response" doc:id="55a3e77b-2905-446a-a0c0-9c98559efd85" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
 payload[0]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="graphql-get-accounts-flow" doc:id="89d2ea8f-b5e6-4340-8876-2c8700362df8" >
+		<graphql-router:data-fetcher objectTypeName="Query" doc:name="query-accounts" doc:id="6786b20b-89d3-4be4-9e54-739509d491ae" config-ref="GraphQL_Router_Config_accounts" fieldName="accounts"/>
+		<http:request method="GET" doc:name="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/accounts" doc:id="38118093-3b54-4fea-ab4e-45163798abb0" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/accounts" >
+		</http:request>
+		<ee:transform doc:name="accounts-response" doc:id="b21d6a5e-d6e6-4338-aae5-27c3591e5155" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>
