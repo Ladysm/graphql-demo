@@ -5,6 +5,7 @@ schema {
 type Query {
   account(id: ID!): Account
   accounts: [Account]
+  accountBalances(id: ID!): AccountBalances
 }
 
 type Account {
@@ -15,4 +16,29 @@ type Account {
   website: String
   company: String
   accountType: String
+}
+type AccountBalances {
+id: ID!
+  firstName: String
+  lastName: String
+  accountType: String
+  company: String
+  address: String
+  phone: String
+  website: String
+  balance: Balance
+}
+
+type Balance {
+  amount: Float
+  currency: String
+  lastUpdated: String
+}
+
+type Transaction {
+  transactionId: ID!
+  date: String
+  amount: Float
+  type: String
+  description: String
 }

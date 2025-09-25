@@ -6,30 +6,21 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/graphql-router http://www.mulesoft.org/schema/mule/graphql-router/current/mule-graphql-router.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<flow name="graphql-fiancial-flow" doc:id="8c5807a2-1174-45d9-b1ad-3cbf1c849099">
+	<!-- [STUDIO:"graphql-fiancial-flow"]<flow name="graphql-fiancial-flow" doc:id="8c5807a2-1174-45d9-b1ad-3cbf1c849099">
 		<http:listener doc:name="/graphiqlFinancial" doc:id="7138a933-28f5-454f-884b-debee15a85fc" config-ref="HTTP_Listener_config" path="/graphiql" />
 		<parse-template doc:name="Parse Template" doc:id="a4f1d42e-e236-4294-80c9-bb1d9bf5e39d" location="index.html" outputMimeType="text/html" />
-		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="da2b8764-fce6-43e7-a153-37fe8c3aaaf5" />
-	</flow>
-	<flow name="graphql-get-financial-implementation-flow" doc:id="8717a13f-f617-4e0f-8bec-dc3dddf623cb" >
+		<set-payload value="#[payload&#93;" doc:name="Set Payload" doc:id="da2b8764-fce6-43e7-a153-37fe8c3aaaf5" />
+	</flow> [STUDIO] -->
+	<!-- [STUDIO:"graphql-get-financial-implementation-flow"]<flow name="graphql-get-financial-implementation-flow" doc:id="8717a13f-f617-4e0f-8bec-dc3dddf623cb" >
 		<http:listener doc:name="/accountDetails" doc:id="d4cd97ef-2414-4458-aa06-7a035bee3d35" config-ref="HTTP_Listener_config" path="/accountDetails"/>
 		<graphql-router:route doc:name="accountDetails" doc:id="7515da0a-d6ed-4a6f-877a-4563c1fac22e" config-ref="GraphQL_Router_Config_account-details"/>
-	</flow>
+	</flow> [STUDIO] -->
 	<flow name="graphql-get-financial-implementationFlow" doc:id="5fc5ee68-27a1-4dc8-b457-934c70c7f9b3" >
-		<graphql-router:data-fetcher objectTypeName="Query" doc:name="accountBalances" doc:id="7c851d35-e4c4-4fec-926c-f8be41f57d05" config-ref="GraphQL_Router_Config_account-details" fieldName="accountBalances"/>
+		<graphql-router:data-fetcher objectTypeName="Query" doc:name="accountBalances" doc:id="7c851d35-e4c4-4fec-926c-f8be41f57d05" config-ref="GraphQL_Router_Config_accounts" fieldName="accountBalances"/>
 		<scatter-gather doc:name="Scatter-Gather" doc:id="024dfa85-fc85-4bec-92ea-c82e59969b18" >
 			<route >
-				<http:request method="GET" doc:name="account-id" doc:id="10caf193-fb6e-47b2-a1a5-83fc02d7f679" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/accounts/{accountId}">
-					<http:uri-params ><![CDATA[#[output application/java
----
-{
-	"accountId" : attributes.arguments.id
-}]]]></http:uri-params>
-				</http:request>
-			</route>
-			<route >
 				<http:request method="GET" doc:name="balances-id" doc:id="3efbbd22-7eeb-4e86-a369-26f37a5dd9cc" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/balances/{accountId}">
-					<http:uri-params ><![CDATA[#[output application/java
+					<http:uri-params><![CDATA[#[output application/java
 ---
 {
 	"accountId" : attributes.arguments.id
@@ -37,23 +28,89 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				</http:request>
 			</route>
 			<route >
-				<!-- [STUDIO:"transactionId"]<http:request method="GET" doc:name="transactionId" doc:id="88c7f812-d5c9-44e7-9014-88cc4d9f6ef1" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/balances/{transactionId}">
-					<http:uri-params ><![CDATA[#[output application/java
-&#45;&#45;-
+				<http:request method="GET" doc:name="account-id" doc:id="10caf193-fb6e-47b2-a1a5-83fc02d7f679" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/accounts/{accountId}">
+					<http:uri-params><![CDATA[#[output application/java
+---
 {
-	"Key" : "Value"
-}&#93;&#93;&#93;></http:uri-params>
-				</http:request> [STUDIO] -->
+	"accountId" : attributes.arguments.id
+}]]]></http:uri-params>
+				</http:request>
 			</route>
 		</scatter-gather>
+		<logger level="INFO" doc:name="Logger" doc:id="46d70c58-8239-448f-b808-f212e275c098" message='#[%dw 2.0&#10;output application/json&#10;var balance = payload[0].payload[0]&#10;var account = payload[1].payload[0]&#10;---&#10;{&#10;  id: account.id ,&#10;  firstName: account.firstName,&#10;  lastName: account.lastName,&#10;  accountType: account.accountType,&#10;  company: account.company,&#10;  address: account.address,&#10;  phone: account.phone,&#10;  website: account.website,&#10;  balance: {&#10;    amount: balance.balance,&#10;    currency: balance.currency,&#10;    lastUpdated: balance.lastUpdated&#10;  }&#10;}]'/>
+		<!-- [STUDIO:"Serialize"]<graphql-router:serialize doc:name="Serialize" doc:id="57629a67-108b-4580-957f-10e09a799b7f" config-ref="GraphQL_Router_Config_accounts" objectTypeName="Query" fieldName="accountBalances"/> [STUDIO] -->
 		<ee:transform doc:name="Transform Message" doc:id="bb49ef2d-2073-4422-908b-b83c090a3223" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
+var balance = payload[0].payload[0]
+var account = payload[1].payload[0]
 ---
-payload]]></ee:set-payload>
+{
+  id: account.id ,
+  firstName: account.firstName,
+  lastName: account.lastName,
+  accountType: account.accountType,
+  company: account.company,
+  address: account.address,
+  phone: account.phone,
+  website: account.website,
+  balance: {
+    amount: balance.balance,
+    currency: balance.currency,
+    lastUpdated: balance.lastUpdated
+  }
+}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<!-- [STUDIO:"Serialize"]<graphql-router:serialize objectTypeName="Query" doc:name="Serialize" doc:id="c8f95c2f-c7e4-47d5-b5f2-909e1489cae5" config-ref="GraphQL_Router_Config_account-details" fieldName="accountBalances"/> [STUDIO] -->
 	</flow>
+	<!-- [STUDIO:"graphql-get-financial-implementationFlow1"]<flow name="graphql-get-financial-implementationFlow1" doc:id="b026ebdb-1203-4532-9e63-b6636e80e964" >
+		<http:listener doc:name="Listener" doc:id="1c9185ed-9539-4a8e-991b-6827f95ac2c9" config-ref="HTTP_Listener_config" path="/scater"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="4137cc87-c803-4bc0-b9a2-7ba7abb8deab" >
+			<route >
+				<http:request method="GET" doc:name="account-id" doc:id="9ff713e2-a7ce-4d89-af87-1a5712d1f33f" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/accounts/{accountId}">
+			<http:uri-params><![CDATA[#[output application/java
+&#45;&#45;-
+{
+	"accountId" : "1"
+}&#93;&#93;&#93;></http:uri-params>
+		</http:request>
+			</route>
+			<route >
+				<http:request method="GET" doc:name="balances-id" doc:id="4bdd1a25-6c11-4b87-b949-b004d7a7b52b" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/balances/{accountId}">
+			<http:uri-params><![CDATA[#[output application/java
+&#45;&#45;-
+{
+	"accountId" : "1"
+}&#93;&#93;&#93;></http:uri-params>
+		</http:request>
+			</route>
+		</scatter-gather>
+		<logger level="INFO" doc:name="Logger" doc:id="a3ab9517-28e0-4501-9f75-4a914c435f77" message='#[%dw 2.0&#10;output application/json&#10;var account = payload."0".payload[0&#93;&#10;var balance = payload."1".payload[0&#93;&#10;&#45;&#45;-&#10;{&#10;  id: account.id as String,&#10;  firstName: account.firstName,&#10;  lastName: account.lastName,&#10;  accountType: account.accountType,&#10;  company: account.company,&#10;  address: account.address,&#10;  phone: account.phone,&#10;  website: account.website,&#10;  balance: {&#10;    amount: balance.balance,&#10;    currency: balance.currency,&#10;    lastUpdated: balance.lastUpdated&#10;  }&#10;}&#93;'/>
+		<ee:transform doc:name="Transform Message" doc:id="5fc2cd07-5477-49a8-b2e7-18a25579f2d7">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+var account = payload."0".payload[0&#93;
+var balance = payload."1".payload[0&#93;
+&#45;&#45;-
+{
+  id: account.id as String,
+  firstName: account.firstName,
+  lastName: account.lastName,
+  accountType: account.accountType,
+  company: account.company,
+  address: account.address,
+  phone: account.phone,
+  website: account.website,
+  balance: {
+    amount: balance.balance,
+    currency: balance.currency,
+    lastUpdated: balance.lastUpdated
+  }
+}
+&#93;&#93;></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+	</flow> [STUDIO] -->
 </mule>

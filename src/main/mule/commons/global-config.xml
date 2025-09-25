@@ -9,5 +9,4 @@ http://www.mulesoft.org/schema/mule/graphql-router http://www.mulesoft.org/schem
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
 	<graphql-router:config name="GraphQL_Router_Config_accounts" doc:name="GraphQL Router Config" doc:id="961fbfbe-9121-4b10-80d6-70593766997d" api="schemas/accounts.graphqls" introspectionEnabled="true" />
-	<graphql-router:config name="GraphQL_Router_Config_account-details" doc:name="GraphQL Router Config" doc:id="613a23ec-2233-470e-a7b8-522311180b23" api="schemas/account-details.graphqls" introspectionEnabled="true" />
 </mule>
