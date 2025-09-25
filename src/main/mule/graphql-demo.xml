@@ -17,7 +17,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<set-payload value='#[payload]' doc:name="Set Payload" doc:id="855122e1-73c0-4a8b-a59c-e69e46241d56" />
 	</flow>
 	<flow name="graphql-demoFlow1" doc:id="7020c030-7902-43a7-bd01-bce1114e45fd" >
-		<http:listener doc:name="/query" doc:id="6df97e3c-6b82-48f4-9f84-43aa1e0536fc" config-ref="HTTP_Listener_config" path="/graphql"/>
+		<http:listener doc:name="/graphql" doc:id="6df97e3c-6b82-48f4-9f84-43aa1e0536fc" config-ref="HTTP_Listener_config" path="/graphql"/>
 		<graphql-router:route doc:name="accounts" doc:id="fb4cdc9f-08d2-4386-b2ff-0f4c900321ef" config-ref="GraphQL_Router_Config_accounts"/>
 	</flow>
 	<flow name="graphql-get-account-by-id-flow" doc:id="39a05311-bcd7-4c63-968c-ce06a684b2c7" >

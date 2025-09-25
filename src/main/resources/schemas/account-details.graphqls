@@ -3,11 +3,14 @@ schema {
 }
 
 type Query {
-  accountDetails(id: ID!): AccountDetails
+  
+  accountBalances(id: ID!): AccountBalances
 }
 
-type AccountDetails {
-  id: ID!
+
+
+type AccountBalances {
+id: ID!
   firstName: String
   lastName: String
   accountType: String
@@ -16,7 +19,6 @@ type AccountDetails {
   phone: String
   website: String
   balance: Balance
-  transactions: [Transaction]
 }
 
 type Balance {

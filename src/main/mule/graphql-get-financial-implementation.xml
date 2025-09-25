@@ -1,15 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/graphql-router http://www.mulesoft.org/schema/mule/graphql-router/current/mule-graphql-router.xsd">
+http://www.mulesoft.org/schema/mule/graphql-router http://www.mulesoft.org/schema/mule/graphql-router/current/mule-graphql-router.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="graphql-fiancial-flow" doc:id="8c5807a2-1174-45d9-b1ad-3cbf1c849099">
+		<http:listener doc:name="/graphiqlFinancial" doc:id="7138a933-28f5-454f-884b-debee15a85fc" config-ref="HTTP_Listener_config" path="/graphiql" />
+		<parse-template doc:name="Parse Template" doc:id="a4f1d42e-e236-4294-80c9-bb1d9bf5e39d" location="index.html" outputMimeType="text/html" />
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="da2b8764-fce6-43e7-a153-37fe8c3aaaf5" />
+	</flow>
 	<flow name="graphql-get-financial-implementation-flow" doc:id="8717a13f-f617-4e0f-8bec-dc3dddf623cb" >
 		<http:listener doc:name="/accountDetails" doc:id="d4cd97ef-2414-4458-aa06-7a035bee3d35" config-ref="HTTP_Listener_config" path="/accountDetails"/>
 		<graphql-router:route doc:name="accountDetails" doc:id="7515da0a-d6ed-4a6f-877a-4563c1fac22e" config-ref="GraphQL_Router_Config_account-details"/>
 	</flow>
 	<flow name="graphql-get-financial-implementationFlow" doc:id="5fc5ee68-27a1-4dc8-b457-934c70c7f9b3" >
-		<graphql-router:data-fetcher objectTypeName="Query" doc:name="account-details" doc:id="0479e80a-e206-4233-a7a4-2dd69ebb4c3d" config-ref="GraphQL_Router_Config_account-details" fieldName="accountDetails"/>
+		<graphql-router:data-fetcher objectTypeName="Query" doc:name="accountBalances" doc:id="7c851d35-e4c4-4fec-926c-f8be41f57d05" config-ref="GraphQL_Router_Config_account-details" fieldName="accountBalances"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="024dfa85-fc85-4bec-92ea-c82e59969b18" >
+			<route >
+				<http:request method="GET" doc:name="account-id" doc:id="10caf193-fb6e-47b2-a1a5-83fc02d7f679" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/accounts/{accountId}">
+					<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"accountId" : attributes.arguments.id
+}]]]></http:uri-params>
+				</http:request>
+			</route>
+			<route >
+				<http:request method="GET" doc:name="balances-id" doc:id="3efbbd22-7eeb-4e86-a369-26f37a5dd9cc" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/balances/{accountId}">
+					<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"accountId" : attributes.arguments.id
+}]]]></http:uri-params>
+				</http:request>
+			</route>
+			<route >
+				<!-- [STUDIO:"transactionId"]<http:request method="GET" doc:name="transactionId" doc:id="88c7f812-d5c9-44e7-9014-88cc4d9f6ef1" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/balances/{transactionId}">
+					<http:uri-params ><![CDATA[#[output application/java
+&#45;&#45;-
+{
+	"Key" : "Value"
+}&#93;&#93;&#93;></http:uri-params>
+				</http:request> [STUDIO] -->
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="bb49ef2d-2073-4422-908b-b83c090a3223" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<!-- [STUDIO:"Serialize"]<graphql-router:serialize objectTypeName="Query" doc:name="Serialize" doc:id="c8f95c2f-c7e4-47d5-b5f2-909e1489cae5" config-ref="GraphQL_Router_Config_account-details" fieldName="accountBalances"/> [STUDIO] -->
 	</flow>
 </mule>
