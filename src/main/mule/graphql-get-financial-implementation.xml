@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:graphql-router="http://www.mulesoft.org/schema/mule/graphql-router" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/graphql-router http://www.mulesoft.org/schema/mule/graphql-router/current/mule-graphql-router.xsd">
+	<flow name="graphql-get-financial-implementation-flow" doc:id="8717a13f-f617-4e0f-8bec-dc3dddf623cb" >
+		<http:listener doc:name="/accountDetails" doc:id="d4cd97ef-2414-4458-aa06-7a035bee3d35" config-ref="HTTP_Listener_config" path="/accountDetails"/>
+		<graphql-router:route doc:name="accountDetails" doc:id="7515da0a-d6ed-4a6f-877a-4563c1fac22e" config-ref="GraphQL_Router_Config_account-details"/>
+	</flow>
+	<flow name="graphql-get-financial-implementationFlow" doc:id="5fc5ee68-27a1-4dc8-b457-934c70c7f9b3" >
+		<graphql-router:data-fetcher objectTypeName="Query" doc:name="account-details" doc:id="0479e80a-e206-4233-a7a4-2dd69ebb4c3d" config-ref="GraphQL_Router_Config_account-details" fieldName="accountDetails"/>
+	</flow>
+</mule>
