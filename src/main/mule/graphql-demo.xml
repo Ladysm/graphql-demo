@@ -18,7 +18,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	</flow>
 	<flow name="graphql-demoFlow1" doc:id="7020c030-7902-43a7-bd01-bce1114e45fd" >
 		<http:listener doc:name="/graphql" doc:id="6df97e3c-6b82-48f4-9f84-43aa1e0536fc" config-ref="HTTP_Listener_config" path="/graphql"/>
-		<graphql-router:route doc:name="accounts" doc:id="fb4cdc9f-08d2-4386-b2ff-0f4c900321ef" config-ref="GraphQL_Router_Config_accounts"/>
+		<graphql-router:route doc:name="Route" doc:id="31bdea1e-c85b-436b-b716-4be629ef5ad5" config-ref="GraphQL_Router_Config_accounts"/>
 	</flow>
 	<flow name="graphql-get-account-by-id-flow" doc:id="39a05311-bcd7-4c63-968c-ce06a684b2c7" >
 		<graphql-router:data-fetcher doc:name="query-account-by-id" doc:id="2b46f11b-b48d-4eac-bd0f-66f55f78d942" config-ref="GraphQL_Router_Config_accounts" objectTypeName="Query" fieldName="account"/>
@@ -47,6 +47,41 @@ payload[0]]]></ee:set-payload>
 		</http:request>
 		<graphql-router:serialize doc:name="accounts-repsonse" doc:id="15676bd7-48ff-4073-9604-8e9a4dbb8491" config-ref="GraphQL_Router_Config_accounts" objectTypeName="Query" fieldName="accounts"/>
 		<!-- [STUDIO:"accounts-response"]<ee:transform doc:name="accounts-response" doc:id="b21d6a5e-d6e6-4338-aae5-27c3591e5155" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+payload&#93;&#93;></ee:set-payload>
+			</ee:message>
+		</ee:transform> [STUDIO] -->
+	</flow>
+	<flow name="graphql-create-transaction-flow" doc:id="a4179011-22cf-45b3-9a7e-e5b2a67cc6fb" >
+		<graphql-router:data-fetcher objectTypeName="Mutation" doc:name="mutation-create-transaction" doc:id="6b82938c-8540-4e37-8e50-d001b318e2c1" config-ref="GraphQL_Router_Config_accounts" fieldName="createTransaction"/>
+		<ee:transform doc:name="Transform Message" doc:id="a8e0fe25-bb29-484b-b318-13e120c35d4d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var body = attributes.arguments."input"
+---
+body update {
+	 case .accountId -> (body.accountId as Number)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="accountId" doc:id="c404622e-f179-49aa-8d15-e6f61dc43eb8" message='#[payload]'/>
+		<logger level="INFO" doc:name="headers" doc:id="c7d2d6f3-ea25-4e52-bfb2-2e589eeb2bc7" message="#[attributes.headers]"/>
+		<http:request method="POST" doc:name="Request" doc:id="44a4589d-55f0-418b-aa3a-f4e12298571f" url="https://financial-system-api-n4cgic.av6c76.usa-e1.cloudhub.io/financial/transactions">
+			<http:body ><![CDATA[#[%dw 2.0
+output application/json
+---
+payload]]]></http:body>
+			<http:headers ><![CDATA[#[{
+	"Content-Type": "application/json",
+	"Accept": "application/json"
+}]]]></http:headers>
+		</http:request>
+		<!-- [STUDIO:"Serialize"]<graphql-router:serialize doc:name="Serialize" doc:id="155dbb47-2bc0-4a0e-b602-0ff9688754fb" config-ref="GraphQL_Router_Config_accounts" objectTypeName="Mutation" fieldName="createTransaction"/> [STUDIO] -->
+		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" doc:id="4fccf476-5276-490c-847e-e3ee46a90375" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json

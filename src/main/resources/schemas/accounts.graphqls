@@ -1,13 +1,3 @@
-schema {
-  query: Query
-}
-
-type Query {
-  account(id: ID!): Account
-  accounts: [Account]
-  accountBalances(id: ID!): AccountBalances
-}
-
 type Account {
   firstName: String
   lastName: String
@@ -17,8 +7,15 @@ type Account {
   company: String
   accountType: String
 }
+
+type Balance {
+  amount: Float
+  currency: String
+  lastUpdated: String
+}
+
 type AccountBalances {
-id: ID!
+   id: ID!
   firstName: String
   lastName: String
   accountType: String
@@ -29,16 +26,39 @@ id: ID!
   balance: Balance
 }
 
-type Balance {
-  amount: Float
-  currency: String
-  lastUpdated: String
-}
 
 type Transaction {
-  transactionId: ID!
+  accountId: ID!
   date: String
   amount: Float
-  type: String
+  transactionType: String
   description: String
+}
+
+input TransactionInput {
+  accountId: ID!
+  date: String!
+  amount: Float!
+  transactionType: String!
+  description: String
+}
+
+type DeleteResponse {
+  message: String!
+}
+
+
+type Query {
+ # Looks for a account by ID
+  account(id: ID!): Account
+ # Returns the list of all accounts
+  accounts: [Account]
+  # Returns  accounts by id
+  accountBalances(id: ID!): AccountBalances
+}
+
+type Mutation {
+ # Creates a new transaction
+  createTransaction(input: TransactionInput!): DeleteResponse
+  deleteTransaction(transactionId: ID!): DeleteResponse
 }
